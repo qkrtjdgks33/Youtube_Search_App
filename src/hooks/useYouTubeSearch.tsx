@@ -3,7 +3,6 @@ import { searchVideos } from "../services/youtubeApi";
 import { YouTubeVideo } from "../types/youtube";
 import { MIN_SEARCH_LENGTH } from "../constants/search";
 
-
 export function useYouTubeSearch() {
     const [videos, setVideos] = useState<YouTubeVideo[]>([]);
     const [loading, setLoading] = useState(false);
