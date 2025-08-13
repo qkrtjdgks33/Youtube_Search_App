@@ -5,8 +5,6 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 ## 🚀 주요 기능
 
 - **YouTube 동영상 검색**: 키워드 기반 실시간 검색
-- **동적 결과 표시**: 검색 결과를 카드 형태로 깔끔하게 표시
-- **반응형 디자인**: 모바일과 데스크톱에서 모두 최적화된 UI
 - **로딩 상태 관리**: 검색 중 로딩 스피너와 에러 처리
 
 ## 🛠️ 기술 스택
@@ -18,7 +16,6 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 
 ### Backend
 - **Node.js** - 서버 런타임 환경
-- **Express.js** - 웹 서버 프레임워크
 - **CORS** - 크로스 오리진 요청 처리
 
 ### API
@@ -30,13 +27,13 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 ```
 youtube-search-app/
 ├── src/                    # React 소스 코드
-│   ├── components/        # 재사용 가능한 UI 컴포넌트
+│   ├── components/       
 │   ├── hooks/            # 커스텀 React 훅
 │   ├── services/         # API 서비스 로직
 │   ├── types/            # TypeScript 타입 정의
 │   └── utils/            # 유틸리티 함수
 ├── server/               # Express 서버 코드
-├── public/               # 정적 파일
+├── public/               
 └── package.json          # 프로젝트 의존성
 ```
 
@@ -79,8 +76,6 @@ npm start
 cd server
 npm start
 ```
-
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 애플리케이션을 확인하세요.
 
 ## 🔑 YouTube Data API 설정
 
@@ -128,4 +123,5 @@ npm start
 - **API 데이터 캐시 저장**
 - **UI 개선**
 - **CSS 분류**
+- **API 활용 기능 추가**
 
