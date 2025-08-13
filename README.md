@@ -24,7 +24,6 @@ npm install
 npm start
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 애플리케이션을 확인하세요.
 
 ### 프로덕션 빌드
 ```bash
