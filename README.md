@@ -5,8 +5,6 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 ## 🚀 주요 기능
 
 - **YouTube 동영상 검색**: 키워드 기반 실시간 검색
-- **동적 결과 표시**: 검색 결과를 카드 형태로 깔끔하게 표시
-- **반응형 디자인**: 모바일과 데스크톱에서 모두 최적화된 UI
 - **로딩 상태 관리**: 검색 중 로딩 스피너와 에러 처리
 
 ## 🛠️ 기술 스택
@@ -18,7 +16,6 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 
 ### Backend
 - **Node.js** - 서버 런타임 환경
-- **Express.js** - 웹 서버 프레임워크
 - **CORS** - 크로스 오리진 요청 처리
 
 ### API
@@ -30,13 +27,13 @@ YouTube 검색 애플리케이션입니다. 사용자가 YouTube에서 동영상
 ```
 youtube-search-app/
 ├── src/                    # React 소스 코드
-│   ├── components/        # 재사용 가능한 UI 컴포넌트
+│   ├── components/       
 │   ├── hooks/            # 커스텀 React 훅
 │   ├── services/         # API 서비스 로직
 │   ├── types/            # TypeScript 타입 정의
 │   └── utils/            # 유틸리티 함수
 ├── server/               # Express 서버 코드
-├── public/               # 정적 파일
+├── public/               
 └── package.json          # 프로젝트 의존성
 ```
 
@@ -80,8 +77,6 @@ cd server
 npm start
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 애플리케이션을 확인하세요.
-
 ## 🔑 YouTube Data API 설정
 
 ### 1. Google Cloud Console 접속
@@ -123,32 +118,10 @@ npm start
 - **환경 변수**: `REACT_APP_` 접두사로 클라이언트 사이드에서만 필요한 변수 관리
 - **CORS 설정**: 서버에서 적절한 CORS 정책 설정
 
-## 🚀 배포
+## 🚀 추가 할 점
 
-### 빌드
-```bash
-npm run build
-```
+- **API 데이터 캐시 저장**
+- **UI 개선**
+- **CSS 분류**
+- **API 활용 기능 추가**
 
-### 정적 호스팅
-빌드된 `build` 폴더를 Netlify, Vercel, GitHub Pages 등에 배포할 수 있습니다.
-
-## 🤝 기여하기
-
-1. 이 저장소를 포크합니다
-2. 새로운 기능 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`)
-3. 변경사항을 커밋합니다 (`git commit -m 'Add amazing feature'`)
-4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`)
-5. Pull Request를 생성합니다
-
-## 📄 라이센스
-
-이 프로젝트는 MIT 라이센스 하에 배포됩니다.
-
-## 📞 문의
-
-프로젝트에 대한 질문이나 제안사항이 있으시면 [이슈](https://github.com/qkrtjdgks33/Youtube_Search_App/issues)를 생성해 주세요.
-
----
-
-⭐ 이 프로젝트가 도움이 되었다면 스타를 눌러주세요!
