@@ -1,11 +1,14 @@
 import { YouTubeVideo } from "../types/youtube";
 import { getThumbnailUrl } from "../utils/validation";
+import VideoPlayer from "./VideoPlayer";
 
 interface VideoItemProps {
   video: YouTubeVideo;
+  onVideoPlay: (videoId: string) => void;
+  selectedVideoId: string | null;
 }
 
-export default function VideoItem({ video }: VideoItemProps) {
+export default function VideoItem({ video, onVideoPlay, selectedVideoId }: VideoItemProps) {
    // 로그 추가
   
   // video 객체가 유효한지 확인
@@ -18,11 +21,19 @@ export default function VideoItem({ video }: VideoItemProps) {
     );
   }
 
+  const isSelected = selectedVideoId === video.id.videoId;
   const { snippet } = video;
   const thumbnailUrl = getThumbnailUrl(snippet.thumbnails);
   const title = snippet.title || "제목 없음";
   const channelTitle = snippet.channelTitle || "채널명 없음";
 
+  const handlePlayClick = () => {
+    onVideoPlay(video.id.videoId);
+  };
+
+  // const handleClosePlayer = () => {
+  //   setShowPlayer(false);
+  // }
   return (
     <div style={{ border: "1px solid gray", margin: "8px", padding: "8px" }}>
       {thumbnailUrl && (
@@ -38,6 +49,17 @@ export default function VideoItem({ video }: VideoItemProps) {
       )}
       <h3>{title}</h3>
       <p>{channelTitle}</p>
+      
+      <button onClick={handlePlayClick} className="play-button">
+        ▶ 재생
+      </button>
+
+      {isSelected && (
+        <VideoPlayer
+        videoId={video.id.videoId}
+        onClose={() => onVideoPlay('')}
+        />
+      )}
     </div>
   );
 }

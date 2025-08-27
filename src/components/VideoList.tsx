@@ -4,9 +4,11 @@ import VideoItem from "./VideoItem";
 
 interface VideoListProps {
   videos: YouTubeVideo[];
+  onVideoPlay: (videoId: string) => void;
+  selectedVideoId: string | null;
 }
 
-export default function VideoList({ videos }: VideoListProps) {
+export default function VideoList({ videos, onVideoPlay, selectedVideoId }: VideoListProps) {
   console.log("📋 VideoList 렌더링, videos:", videos); // 로그 추가
   
   // videos가 없거나 빈 배열인 경우 처리
@@ -26,7 +28,11 @@ export default function VideoList({ videos }: VideoListProps) {
       {videos.map((video, index) => {
         console.log(`🎥 비디오 ${index + 1} 렌더링:`, video.snippet?.title); // 로그 추가
         return (
-          <VideoItem key={video.id?.videoId || index} video={video} />
+          <VideoItem key={video.id?.videoId || index}
+           video={video}
+           onVideoPlay={onVideoPlay}
+           selectedVideoId={selectedVideoId}
+           />
         );
       })}
     </div>

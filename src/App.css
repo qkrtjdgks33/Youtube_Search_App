@@ -36,3 +36,125 @@
     transform: rotate(360deg);
   }
 }
+
+.play-button {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.play-button:hover {
+  background-color: #cc0000;
+}
+
+.play-button:active {
+  background-color: #990000;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  color: #666;
+}
+
+
+.video-player-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.video-player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.video-player-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-button:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.youtube-player {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.video-player-info {
+  margin-top: 20px;
+  text-align: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.video-player-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 반응형디자인 */
+@media (max-width: 768px) {
+  .video-player-container {
+    padding: 16px;
+    margin: 20px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+  }
+
+  .video-player-header h3 {
+    font-size: 16px;
+  }
+
+  .close-button{
+    font-size: 20px;
+    padding: 6px;
+  }
+}
+
+/* 배경 오버레이 (선택사항) */
+.video-player-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
