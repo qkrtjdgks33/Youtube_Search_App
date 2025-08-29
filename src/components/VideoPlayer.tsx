@@ -1,6 +1,29 @@
 import React, { useState } from "react";
 import YouTube from "react-youtube";
 
+interface YoutubeError {
+    target: any;
+    data: number;
+}
+
+const getErrorMessage = (errorCode: number): string => {
+    switch (errorCode) {
+        case 2:
+            return '잘못된 매개변수입니다.(삭제되었거나 비공개 되었습니다.)';
+        case 5:
+            return 'HTML5 Player 오류가 발생하였습니다.';
+        case 100:
+            return '해당 동영상을 찾을 수 없습니다. (삭제되었거나 비공개 되었습니다.)';
+        case 101:
+            return '이 동영상은 재생할 수 없습니다.';
+        case 150:
+            return '이 동영상은 임베디드할 수 없습니다.';
+        default:
+            return '알 수 없는 오류가 발생하였습니다.';
+    }
+};
+
+
 interface VideoPlayerProps {
     videoId: string;
     onClose?: () => void;
@@ -29,8 +52,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId, onClose }) => {
     };
 
     // 에러 발생 시 처리
-    const onError = (error: any) => {
-        console.error('YouTube Player 에러:', error);
+    const onError = (error: YoutubeError) => {
+        const errorMessage = getErrorMessage(error.data);
+        console.error('YouTube Player 에러:', errorMessage);
     };
 
     return (

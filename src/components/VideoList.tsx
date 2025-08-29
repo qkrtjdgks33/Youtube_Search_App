@@ -15,7 +15,7 @@ export default function VideoList({ videos, onVideoPlay, selectedVideoId }: Vide
   if (!videos || videos.length === 0) {
     console.log("📭 비디오가 없음"); // 로그 추가
     return (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div className="empty-state">
         <p>검색어를 입력하여 비디오를 찾아보세요!</p>
       </div>
     );
