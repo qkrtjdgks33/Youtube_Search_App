@@ -1,36 +1,66 @@
-import { useRef, useState } from "react";
-import { searchVideos } from "../services/youtubeApi";
+import { useCallback, useState } from "react";
 import { YouTubeVideo } from "../types/youtube";
-import { MIN_SEARCH_LENGTH } from "../constants/search";
+import { searchVideos, searchVideosNext, searchVideosRaw } from "../services/youtubeApi";
 
 export function useYouTubeSearch() {
     const [videos, setVideos] = useState<YouTubeVideo[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [keyword, setKeyword] = useState("");
+    const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false); // 첫 페이지 로딩
+    const [loadingMore, setLoadingMore] = useState(false) // 다음 페이지 로딩
     const [error, setError] = useState<string | null>(null);
-    const abortRef = useRef<AbortController | null>(null);
 
-    const handleSearch = async (keyword: string) => {
-        const q = keyword.trim();
-        if (!q || q.length < MIN_SEARCH_LENGTH) return;
-
+    // 첫 검색
+    const handleSearch = useCallback(async (raw: string) => {
+        const q = raw.trim();
+        if (q.length < 2) {
+            setError("검색어는 2자 이상이어야 합니다.");
+            return;
+        }
+        setKeyword(q);
+        setVideos([]);
+        setNextPageToken(null);
+        setError(null);
+        setLoading(true);
         try {
-            setLoading(true);
-            setError(null);
-
-            if (abortRef.current) abortRef.current.abort();
-            abortRef.current = new AbortController();
-
-            const results = await searchVideos(q, { signal: abortRef.current.signal });
-            setVideos(Array.isArray(results) ? results : []);
+            const data = await searchVideosRaw(q);
+            setVideos(data.results);
+            setNextPageToken(data.nextPageToken ?? null);
         } catch (e: any) {
-            if (e?.name !== "AbortError") {
-                setError("오류가 발생했습니다. 다시 시도하세요");
-                setVideos([]);
-            }
+            setError(e?.message || "검색 중 오류가 발생하였습니다.");
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    return { videos, loading, error, handleSearch };
+    // 다음 페이지
+    const loadMore = useCallback(async () => {
+        if (!keyword || !nextPageToken || loadingMore) return;
+        setLoadingMore(true);
+        try {
+            const data = await searchVideosNext(keyword, nextPageToken);
+            // 중복 제거
+            const exist = new Set(videos.map(v => v?.id?.videoId));
+            const append = data.results.filter(v => !exist.has(v?.id?.videoId));
+            setVideos(prev => [...prev, ...append]);
+            setNextPageToken(data.nextPageToken ?? null);
+        } catch {
+            // 필요시 setError 추가
+        } finally {
+            setLoadingMore(false);
+        }
+    }, [keyword, nextPageToken, loadingMore, videos]);
+
+    const hasMore = !!nextPageToken;
+
+    return { 
+        videos,
+        loading,
+        loadingMore,
+        error,
+        hasMore,
+        keyword,
+        handleSearch,
+        loadMore,
+    };
 }
