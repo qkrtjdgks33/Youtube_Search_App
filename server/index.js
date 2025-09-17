@@ -1,9 +1,18 @@
 const express = require('express');
 const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { error } = require('console');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+
+// API 키 확인
+if (!process.env.GEMINI_API_KEY) {
+  console.error('❌ GEMINI_API_KEY가 설정되지 않았습니다.');
+  console.error('server/.env 파일에 GEMINI_API_KEY를 설정해주세요.');
+}
 
 // 미들웨어 설정
 app.use(cors({
@@ -171,6 +180,76 @@ app.get('/api/health', (req, res) => {
     message: 'YouTube 검색 프록시 서버가 정상 작동 중입니다.',
     timestamp: new Date().toISOString()
   });
+});
+
+app.post(`/api/ai-search`, async (req, res) => {
+  try {
+    // API 키 확인
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({
+        error: 'GEMINI_API_KEY가 설정되지 않았습니다. server/.env 파일에 API 키를 추가해주세요.'
+      });
+    }
+
+    const {query} = req.body;
+
+    // 검색어가 없으면 에러
+   if (!query || query.trim() === '') {
+    return res.status(400).json({
+      error: '검색어를 입력해주세요!!'
+    });
+   } 
+
+   console.log('�� Gemini AI 검색 요청:', query);
+
+   //Gemini AI 모델 가져오기
+   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+
+   // 프롬프트 설정
+   const prompt = `당신은 음악 추천 전문가입니다. 사용자의 요청에 따라 구체적인 노래 제목과 아티스트를 추천해주세요.
+   
+   사용자 요청: ${query}
+
+    다음 형식으로 답변해주세요:
+   - 각 노래마다 제목과 아티스트를 명확히 구분
+   - 각 노래 사이에 빈 줄 추가
+   - 번호나 기호를 사용해서 구분
+   - 가독성을 위해 적절한 줄바꿈 사용
+  또한 노래를 추천해줄 시 줄바꿈을 해주고, 다음 형식 중 하나로 답변해주세요:
+   
+   형식 1 (번호 목록):
+   1. 노래 제목 - 아티스트명
+   2. 노래 제목 - 아티스트명
+   
+   형식 2 (기호 목록):
+   • 노래 제목 - 아티스트명
+   • 노래 제목 - 아티스트명
+   
+   형식 3 (카테고리별):
+   [장르명]
+   - 노래 제목 - 아티스트명
+   - 노래 제목 - 아티스트명
+   
+   `;
+
+   //gemini AI 호출
+   const result = await model.generateContent(prompt);
+   const response = await result.response;
+   const aiResponse = response.text();
+
+   console.log('Gemini AI 응답 생성 완료');
+   
+   res.json({
+    success: true,
+    recommendations: aiResponse
+   });
+   
+  } catch (error) {
+    console.error('❌ Gemini AI 오류:', error);
+    res.status(500).json({
+      error: 'AI 검색 중 오류가 발생했습니다.'
+    });
+  }
 });
 
 // 서버 시작

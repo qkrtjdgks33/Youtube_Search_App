@@ -4,7 +4,9 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import SearchBar from "./components/SearchBar";
 import VideoList from "./components/VideoList";
 import { useYouTubeSearch } from "./hooks/useYouTubeSearch";
+import AISearchBar from "./components/AISearchBar";
 import './App.css';
+import { useAISearch } from "./hooks/useAISearch";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -13,6 +15,10 @@ function App() {
     videos, loading, loadingMore, error,
     hasMore, handleSearch, loadMore,
   } = useYouTubeSearch();
+
+  const { recommendations, loading: aiLoading, error: aiError, searchWithAI} = useAISearch();
+  
+  console.log('🔍 App.tsx - AI 훅 상태:', { recommendations, aiLoading, aiError, searchWithAI });
 
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -46,8 +52,33 @@ function App() {
       <h1>Youtube 검색 사이트(박성한)</h1>
       <SearchBar onSearch={handleSearch} loading={loading || loadingMore} />
 
+      {/* AI 검색 바 추가*/}
+      <div style={{background: 'red', padding: '10px', margin: '10px 0'}}>
+        <p>🔍 AI 검색 바 테스트 - 이 텍스트가 보이나요?</p>
+        <AISearchBar onAISearch={searchWithAI} loading={aiLoading} />
+      </div>
+
+      {/* AI 추천 결과 표시 */}
+      {recommendations && (
+        <div style={{
+          background: '#e8f5e8',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          border: '1px solid #4caf50'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#2e7d32' }}>🤖 AI 추천 결과</h3>
+          <p style={{ 
+            margin: 0,
+            lineHeight: ' 1.8',
+            whiteSpace: 'pre-line'
+             }}>{recommendations}</p>
+        </div>
+      )}
+
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error} />}
+      {aiError && <ErrorMessage message={aiError} />}
       {!loading && !error && videos.length === 0 && <EmptyState />}
 
       <VideoList 
