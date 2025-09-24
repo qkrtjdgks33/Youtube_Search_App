@@ -54,7 +54,6 @@ function App() {
 
       {/* AI 검색 바 추가*/}
       <div style={{background: 'red', padding: '10px', margin: '10px 0'}}>
-        <p>🔍 AI 검색 바 테스트 - 이 텍스트가 보이나요?</p>
         <AISearchBar onAISearch={searchWithAI} loading={aiLoading} />
       </div>
 

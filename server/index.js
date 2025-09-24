@@ -4,14 +4,32 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { error } = require('console');
 require('dotenv').config();
 
+let _fetch = global.fetch;
+if (typeof _fetch !== 'function') {
+  _fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // API 키 확인
 if (!process.env.GEMINI_API_KEY) {
   console.error('❌ GEMINI_API_KEY가 설정되지 않았습니다.');
   console.error('server/.env 파일에 GEMINI_API_KEY를 설정해주세요.');
+}
+
+//Youtube 영상 길이를 초 단위로 변환하는 함수
+function parseISODuration(s) {
+  const m = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(s || '') || [];
+  const h = +(m[1]||0), mi = +(m[2]||0), se = +(m[3]||0);
+  return h*3600 + mi*60 + se;
+}
+
+// 공식 오디오인지 확인하는 함수
+function looksLikeOfficialAudio(title='') {
+  const t = title.toLowerCase();
+  return t.includes('official audio') || t.includes('provided to youtube by');
 }
 
 // 미들웨어 설정
@@ -215,20 +233,14 @@ app.post(`/api/ai-search`, async (req, res) => {
    - 각 노래 사이에 빈 줄 추가
    - 번호나 기호를 사용해서 구분
    - 가독성을 위해 적절한 줄바꿈 사용
-  또한 노래를 추천해줄 시 줄바꿈을 해주고, 다음 형식 중 하나로 답변해주세요:
-   
-   형식 1 (번호 목록):
-   1. 노래 제목 - 아티스트명
-   2. 노래 제목 - 아티스트명
-   
-   형식 2 (기호 목록):
-   • 노래 제목 - 아티스트명
-   • 노래 제목 - 아티스트명
-   
-   형식 3 (카테고리별):
-   [장르명]
+  또한 노래를 추천해줄 시 줄바꿈을 해주고, 다음 형식 으로 답변해주세요:
+ 
    - 노래 제목 - 아티스트명
    - 노래 제목 - 아티스트명
+
+   추가로 음악 전문가 이기에 간단하게 노래 소개를 해주세요.
+   만약 사용자가 원하는 노래의 개수가 부족하다면 그와 비슷한 다른 노래들을 추천해주세요
+   기본적으로 한국의 최근 인터넷 기준으로 노래를 소개해 주세요.
    
    `;
 
